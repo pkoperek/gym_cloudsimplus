@@ -1,0 +1,49 @@
+from py4j.java_gateway import JavaGateway
+
+gateway = JavaGateway()
+simulation_environment = gateway.entry_point
+
+# result = simulation_environment.step(0)
+
+# print(result)
+# print(result.isDone())
+# print(result.getObs())
+# print(result.getReward())
+
+result = simulation_environment.render()
+
+print("Start: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
+
+#print("Size: " + str(len(result)))
+#for i in range(len(result)):
+#    print("Render: " + str(i) + " " + str(len(result[i])))
+#
+#    for j in range(len(result[i])):
+#        print("Render: " + str(i) + " " + str(j) + " " + str(result[i][j]))
+
+
+simulation_environment.step(0)
+result = simulation_environment.render()
+print("Did nothing: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
+
+simulation_environment.step(1)
+result = simulation_environment.render()
+print("Added VM: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
+
+simulation_environment.step(0)
+result = simulation_environment.render()
+print("Did nothing: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
+
+simulation_environment.step(2)
+result = simulation_environment.render()
+print("Destroyed VM: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
+
+simulation_environment.step(0)
+result = simulation_environment.render()
+print("Did nothing: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
+simulation_environment.step(0)
+result = simulation_environment.render()
+print("Did nothing: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
+simulation_environment.step(0)
+result = simulation_environment.render()
+print("Did nothing: " + str(gateway.jvm.java.util.Arrays.toString(result[0][-5:])))
