@@ -52,7 +52,9 @@ class SingleDCAppEnv(gym.Env):
     def render(self, mode='human', close=False):
         result = simulation_environment.render()
         if mode == 'human':
-            print(result)
+            print("Render: ")
+            for i in range(len(result)):
+                print(str(i) + ": " + str(gateway.jvm.java.util.Arrays.toString(result[i])))
         elif mode != 'ansi' and mode != 'human':
             return super().render(mode)
 
