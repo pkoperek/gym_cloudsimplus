@@ -14,9 +14,13 @@ gateway = JavaGateway()
 simulation_environment = gateway.entry_point
 
 
+def to_string(java_array):
+    return gateway.jvm.java.util.Arrays.toString(java_array)
+
+
 # Based on https://github.com/openai/gym/blob/master/gym/core.py
 class SingleDCAppEnv(gym.Env):
-    metadata = {'render.modes': ['human', 'ansi']}
+    metadata = {'render.modes': ['human', 'ansi', 'array']}
 
     def __init__(self):
         # actions are identified by integers 0-n
@@ -51,14 +55,21 @@ class SingleDCAppEnv(gym.Env):
 
     def render(self, mode='human', close=False):
         result = simulation_environment.render()
-        if mode == 'human':
-            print("Render: ")
+        if mode == 'human' or mode == 'ansi':
+            result_str = ""
             for i in range(len(result)):
-                print(str(i) + ": " + str(gateway.jvm.java.util.Arrays.toString(result[i])))
+                result_str += str(i) + ": "
+                result_str += str(to_string(result[i]))
+
+            if mode == 'human':
+                print("Measurements: ")
+                print(result_str)
+
+            return result_str
+        elif mode == 'array':
+            return result
         elif mode != 'ansi' and mode != 'human':
             return super().render(mode)
-
-        return result
 
     def close(self):
         # close the resources
