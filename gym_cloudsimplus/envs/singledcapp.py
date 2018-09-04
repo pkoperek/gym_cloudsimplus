@@ -28,7 +28,7 @@ class SingleDCAppEnv(gym.Env):
 
     def __init__(self):
         # actions are identified by integers 0-n
-        self.num_of_actions = 2
+        self.num_of_actions = 3
         self.action_space = spaces.Discrete(self.num_of_actions)
 
         # format of observations - delta in current step
