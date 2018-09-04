@@ -1,7 +1,8 @@
 import gym
+import os
 from gym import error, spaces, utils
 from gym.utils import seeding
-from py4j.java_gateway import JavaGateway
+from py4j.java_gateway import JavaGateway, GatewayParameters
 
 import numpy as np
 
@@ -10,7 +11,10 @@ ACTION_NOTHING = 0
 ACTION_ADD_VM = 1
 ACTION_REMOVE_VM = 2
 
-gateway = JavaGateway()
+address = os.getenv('CLOUDSIM_GATEWAY_HOST', 'cloudsimplus-gateway')
+port = os.getenv('CLOUDSIM_GATEWAY_PORT', '25333')
+parameters = GatewayParameters(address=address, port=port)
+gateway = JavaGateway(gateway_parameters=parameters)
 simulation_environment = gateway.entry_point
 
 
