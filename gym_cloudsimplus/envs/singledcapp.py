@@ -13,7 +13,7 @@ ACTION_REMOVE_VM = 2
 
 address = os.getenv('CLOUDSIM_GATEWAY_HOST', 'cloudsimplus-gateway')
 port = os.getenv('CLOUDSIM_GATEWAY_PORT', '25333')
-parameters = GatewayParameters(address=address, port=port)
+parameters = GatewayParameters(address=address, port=int(port))
 gateway = JavaGateway(gateway_parameters=parameters)
 simulation_environment = gateway.entry_point
 
