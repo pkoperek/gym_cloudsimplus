@@ -37,9 +37,10 @@ class SingleDCAppEnv(gym.Env):
         # 3. p90 latency - max 5000 ms
         # 4. Average CPU utilization
         # 5. p90 CPU utilization
+        # 6. total wait time
         self.observation_space = spaces.Box(
-            low=np.array([0, 0, 0, 0, 0]),
-            high=np.array([1000, 5000, 5000, 100, 100])
+            low=np.array([0, 0, 0, 0, 0, 0]),
+            high=np.array([99999, 9999999, 9999999, 100, 100, 9999999])
         )
 
     def step(self, action):
