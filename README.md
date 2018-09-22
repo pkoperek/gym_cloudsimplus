@@ -10,11 +10,12 @@ The environment has two parameters (set an environment variables):
 
 In the `manual_tests`directory you can find three test scripts:
 
-* `test_connect.py` - connects to the gateway and tries to tries to add/remove
-  virtual machines
-* `test_finish.py` - runs the simulation scenario until its end
-* `test_run_env.py` - a smoke test which connects to the gateway, performs
-  5 steps and stops
+* `test_connect.py` - connects to the gateway directory and tries to tries to 
+  add/remove virtual machines
+* `test_finish.py` - connects to the gateway directly and runs the simulation 
+  scenario until its end
+* `test_run_env.py` - a smoke test which connects to the gateway through the 
+  Open AI Gym, performs 5 steps and stops
 
 For testing it is usually a good idea to redirect the environment to a local
 gateway server by:
