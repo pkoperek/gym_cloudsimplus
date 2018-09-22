@@ -1,5 +1,6 @@
 import gym
 import os
+import json
 from gym import error, spaces, utils
 from gym.utils import seeding
 from py4j.java_gateway import JavaGateway, GatewayParameters
@@ -59,20 +60,16 @@ class SingleDCAppEnv(gym.Env):
         simulation_environment.reset()
 
     def render(self, mode='human', close=False):
+        # result is a string with arrays encoded as json
         result = simulation_environment.render()
         if mode == 'human' or mode == 'ansi':
-            result_str = ""
-            for i in range(len(result)):
-                result_str += str(i) + ": "
-                result_str += str(to_string(result[i]))
-
             if mode == 'human':
                 print("Measurements: ")
-                print(result_str)
+                print(result)
 
-            return result_str
-        elif mode == 'array':
             return result
+        elif mode == 'array':
+            return json.loads(result)
         elif mode != 'ansi' and mode != 'human':
             return super().render(mode)
 
