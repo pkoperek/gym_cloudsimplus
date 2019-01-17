@@ -56,8 +56,14 @@ class SingleDCAppEnv(gym.Env):
             {}
         )
 
-    def reset(self):
-        simulation_environment.reset()
+    def reset(self, simulation_start=None, simulation_end=None):
+        params = gateway.jvm.java.util.HashMap()
+        if simulation_start:
+            params['START_TIME'] = str(simulation_start)
+
+        if simulation_end:
+            params['END_TIME'] = str(simulation_end)
+        simulation_environment.reset(params)
 
     def render(self, mode='human', close=False):
         # result is a string with arrays encoded as json
