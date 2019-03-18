@@ -57,7 +57,7 @@ class SingleDCAppEnv(gym.Env):
         )
 
     def reset(self):
-        simulation_environment.reset()
+        return simulation_environment.reset()
 
     def render(self, mode='human', close=False):
         # result is a string with arrays encoded as json
