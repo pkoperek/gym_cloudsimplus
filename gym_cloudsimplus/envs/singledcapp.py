@@ -23,10 +23,7 @@ def to_string(java_array):
 
 
 def to_nparray(raw_obs):
-    obs = []
-    for serie in raw_obs:
-        obs.extend(list(serie))
-
+    obs = list(raw_obs)
     return np.array(obs)
 
 
@@ -52,6 +49,8 @@ class SingleDCAppEnv(gym.Env):
         )
 
     def step(self, action):
+        if type(action) == np.int64:
+            action = action.item()
         result = simulation_environment.step(action)
         reward = result.getReward()
         done = result.isDone()
