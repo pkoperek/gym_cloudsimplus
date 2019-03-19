@@ -1,8 +1,7 @@
 import gym
 import os
 import json
-from gym import error, spaces, utils
-from gym.utils import seeding
+from gym import spaces
 from py4j.java_gateway import JavaGateway, GatewayParameters
 
 import numpy as np
@@ -21,6 +20,14 @@ simulation_environment = gateway.entry_point
 
 def to_string(java_array):
     return gateway.jvm.java.util.Arrays.toString(java_array)
+
+
+def to_nparray(raw_obs):
+    obs = []
+    for serie in raw_obs:
+        obs.expand(list(serie))
+
+    return np.array(obs)
 
 
 # Based on https://github.com/openai/gym/blob/master/gym/core.py
@@ -46,9 +53,11 @@ class SingleDCAppEnv(gym.Env):
 
     def step(self, action):
         result = simulation_environment.step(action)
-        obs = result.getObs()
         reward = result.getReward()
         done = result.isDone()
+        raw_obs = result.getObs()
+
+        obs = to_nparray(raw_obs)
         return (
             obs,
             reward,
@@ -57,7 +66,10 @@ class SingleDCAppEnv(gym.Env):
         )
 
     def reset(self):
-        return simulation_environment.reset()
+        result = simulation_environment.reset()
+        raw_obs = result.getObs()
+        obs = to_nparray(raw_obs)
+        return obs
 
     def render(self, mode='human', close=False):
         # result is a string with arrays encoded as json
