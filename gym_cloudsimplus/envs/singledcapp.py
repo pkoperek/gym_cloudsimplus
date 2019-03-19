@@ -25,7 +25,7 @@ def to_string(java_array):
 def to_nparray(raw_obs):
     obs = []
     for serie in raw_obs:
-        obs.expand(list(serie))
+        obs.extend(list(serie))
 
     return np.array(obs)
 
