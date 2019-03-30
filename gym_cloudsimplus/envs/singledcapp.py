@@ -38,14 +38,21 @@ class SingleDCAppEnv(gym.Env):
 
         # format of observations - delta in current step
         # 1. number of VMs - up to 1000
-        # 2. p99 latency - max 5000 ms
-        # 3. p90 latency - max 5000 ms
+        # 2. p99 latency
+        # 3. p90 latency
         # 4. Average CPU utilization
         # 5. p90 CPU utilization
         # 6. total wait time
+        # 7. wait queue size
         self.observation_space = spaces.Box(
-            low=np.array([0, 0, 0, 0, 0, 0]),
-            high=np.array([99999, 9999999, 9999999, 100, 100, 9999999])
+            low=np.array([0, 0, 0, 0, 0, 0, 0]),
+            high=np.array([99999,
+                           9999999,
+                           9999999,
+                           100,
+                           100,
+                           9999999,
+                           9999999])
         )
 
     def step(self, action):
@@ -73,14 +80,14 @@ class SingleDCAppEnv(gym.Env):
     def render(self, mode='human', close=False):
         # result is a string with arrays encoded as json
         result = simulation_environment.render()
-        if mode == 'human' or mode == 'ansi':
+        arr = json.loads(result)
+        if mode == 'ansi' or mode == 'human':
             if mode == 'human':
-                print("Measurements: ")
-                print(result)
+                print([ser[-1] for ser in arr])
 
             return result
         elif mode == 'array':
-            return json.loads(result)
+            return arr
         elif mode != 'ansi' and mode != 'human':
             return super().render(mode)
 
