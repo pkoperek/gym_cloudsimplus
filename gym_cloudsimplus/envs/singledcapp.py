@@ -13,7 +13,9 @@ ACTION_REMOVE_VM = 2
 
 address = os.getenv('CLOUDSIM_GATEWAY_HOST', 'cloudsimplus-gateway')
 port = os.getenv('CLOUDSIM_GATEWAY_PORT', '25333')
-parameters = GatewayParameters(address=address, port=int(port))
+parameters = GatewayParameters(address=address,
+                               port=int(port),
+                               auto_convert=True)
 gateway = JavaGateway(gateway_parameters=parameters)
 simulation_environment = gateway.entry_point
 
@@ -31,7 +33,7 @@ def to_nparray(raw_obs):
 class SingleDCAppEnv(gym.Env):
     metadata = {'render.modes': ['human', 'ansi', 'array']}
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         # actions are identified by integers 0-n
         self.num_of_actions = 3
         self.action_space = spaces.Discrete(self.num_of_actions)
@@ -45,20 +47,26 @@ class SingleDCAppEnv(gym.Env):
         # 6. total wait time
         # 7. wait queue size
         self.observation_space = spaces.Box(
-            low=np.array([0, 0, 0, 0, 0, 0, 0]),
+            low=np.array([0, 0, 0, 0, 0, 0]),
             high=np.array([99999,
                            9999999,
                            9999999,
                            100,
                            100,
-                           9999999,
                            9999999])
         )
+        params = {
+            'INITIAL_VM_COUNT': kwargs.get('initial_vm_count'),
+            'SOURCE_OF_JOBS': 'PARAMS',
+            'JOBS': kwargs.get('jobs_as_json', '[]'),
+        }
+
+        self.simulation_id = simulation_environment.createSimulation(params)
 
     def step(self, action):
         if type(action) == np.int64:
             action = action.item()
-        result = simulation_environment.step(action)
+        result = simulation_environment.step(self.simulation_id, action)
         reward = result.getReward()
         done = result.isDone()
         raw_obs = result.getObs()
@@ -72,14 +80,14 @@ class SingleDCAppEnv(gym.Env):
         )
 
     def reset(self):
-        result = simulation_environment.reset()
+        result = simulation_environment.reset(self.simulation_id)
         raw_obs = result.getObs()
         obs = to_nparray(raw_obs)
         return obs
 
     def render(self, mode='human', close=False):
         # result is a string with arrays encoded as json
-        result = simulation_environment.render()
+        result = simulation_environment.render(self.simulation_id)
         arr = json.loads(result)
         if mode == 'ansi' or mode == 'human':
             if mode == 'human':
@@ -93,7 +101,7 @@ class SingleDCAppEnv(gym.Env):
 
     def close(self):
         # close the resources
-        simulation_environment.close()
+        simulation_environment.close(self.simulation_id)
 
     def seed(self):
-        simulation_environment.seed()
+        simulation_environment.seed(self.simulation_id)
