@@ -59,7 +59,11 @@ class SingleDCAppEnv(gym.Env):
             'INITIAL_VM_COUNT': kwargs.get('initial_vm_count'),
             'SOURCE_OF_JOBS': 'PARAMS',
             'JOBS': kwargs.get('jobs_as_json', '[]'),
+            'SIMULATION_SPEEDUP': kwargs.get('simulation_speedup', '1.0'),
         }
+
+        if 'queue_wait_penalty' in kwargs:
+            params['QUEUE_WAIT_PENALTY'] = kwargs['queue_wait_penalty']
 
         self.simulation_id = simulation_environment.createSimulation(params)
 
