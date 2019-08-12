@@ -38,28 +38,30 @@ class SingleDCAppEnv(gym.Env):
         self.num_of_actions = 3
         self.action_space = spaces.Discrete(self.num_of_actions)
 
-        # format of observations - delta in current step
-        # 1. number of VMs - up to 1000
-        # 2. p99 latency
-        # 3. p90 latency
-        # 4. Average CPU utilization
-        # 5. p90 CPU utilization
-        # 6. total wait time
-        # 7. wait queue size
+        # observation metrics - all within 0-1 range
+        # "vmAllocatedRatioHistory",
+        # "avgCPUUtilizationHistory",
+        # "p90CPUUtilizationHistory",
+        # "avgMemoryUtilizationHistory",
+        # "p90MemoryUtilizationHistory",
+        # "waitingJobsRatioGlobalHistory",
+        # "waitingJobsRatioRecentHistory"
         self.observation_space = spaces.Box(
-            low=np.array([0, 0, 0, 0, 0, 0]),
-            high=np.array([99999,
-                           9999999,
-                           9999999,
-                           100,
-                           100,
-                           9999999])
+            low=np.array([0, 0, 0, 0, 0, 0, 0]),
+            high=np.array([1.0,
+                           1.0,
+                           1.0,
+                           1.0,
+                           1.0,
+                           1.0,
+                           1.0])
         )
         params = {
             'INITIAL_VM_COUNT': kwargs.get('initial_vm_count'),
             'SOURCE_OF_JOBS': 'PARAMS',
             'JOBS': kwargs.get('jobs_as_json', '[]'),
             'SIMULATION_SPEEDUP': kwargs.get('simulation_speedup', '1.0'),
+            'SPLIT_LARGE_JOBS': kwargs.get('split_large_jobs', 'false'),
         }
 
         if 'queue_wait_penalty' in kwargs:

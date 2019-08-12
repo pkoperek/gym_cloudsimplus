@@ -1,18 +1,26 @@
 import gym
 import gym_cloudsimplus
+import json
 
-env = gym.make('SingleDCAppEnv-v0', initial_vm_count="10")
+from read_swf import jobs
+
+env = gym.make('SingleDCAppEnv-v0',
+               initial_vm_count="10",
+               jobs_as_json=json.dumps(jobs),
+               simulation_speedup="1000",
+               split_large_jobs="true",
+               )
+
 env.reset()
-for _ in range(5):
-    rendered = env.render(mode='array')
-    print("Rendered env length: " + str(len(rendered)) + " " + str(type(rendered)))
-    print(rendered)
 
-    for lst in rendered:
-        print(len(lst))
+it = 0
+reward_sum = 0
+while True:
+    observation, reward, done, info = env.step(0)
+    print(f'{it}, {observation}, {reward}')
+    reward_sum += reward
 
-    observation, reward, done, info = env.step(env.action_space.sample())
-
+    it += 1
     if done:
-        print("Episode finished!")
+        print("Episode finished! Reward sum: {reward_sum}")
         break
