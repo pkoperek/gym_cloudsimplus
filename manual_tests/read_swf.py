@@ -52,7 +52,7 @@ class SwfJob(object):
 
 jobs = []
 
-with open('KTH-SP2-1996-2.1-cln.swf', 'r') as f:
+with open('LLNL-Atlas-2006-2.1-cln.swf', 'r') as f:
     for line in f.readlines():
         if line.startswith(';'):
             continue
@@ -66,7 +66,7 @@ with open('KTH-SP2-1996-2.1-cln.swf', 'r') as f:
         run_time = splitted[3]
         allocated_cores = splitted[4]
 
-        mips = 264
+        mips = 1250
 
         if int(run_time) > 0 and int(allocated_cores) > 0:
             job = SwfJob(
