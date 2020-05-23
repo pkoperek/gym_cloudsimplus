@@ -59,7 +59,7 @@ class ThreeSizeAppEnv(gym.Env):
             'SOURCE_OF_JOBS': 'PARAMS',
             'JOBS': kwargs.get('jobs_as_json', '[]'),
             'SIMULATION_SPEEDUP': kwargs.get('simulation_speedup', '1.0'),
-            'SPLIT_LARGE_JOBS': kwargs.get('split_large_jobs', 'false'),
+            'SPLIT_LARGE_JOBS': kwargs.get('split_large_jobs', 'true'),
         }
 
         if 'queue_wait_penalty' in kwargs:
