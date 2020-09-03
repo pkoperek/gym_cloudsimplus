@@ -6,6 +6,9 @@ from py4j.java_gateway import JavaGateway, GatewayParameters
 
 import numpy as np
 
+# Default no of vms
+DEFAULT_NO_OF_VMS = 1
+
 # Available actions
 ACTION_NOTHING = 0
 ACTION_ADD_SMALL_VM = 1
@@ -54,8 +57,15 @@ class ThreeSizeAppEnv(gym.Env):
             low=np.array([0, 0, 0, 0, 0, 0, 0]),
             high=np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
         )
+
+        default_vm_cnt = kwargs.get('initial_vm_count', DEFAULT_NO_OF_VMS)
         params = {
-            'INITIAL_VM_COUNT': kwargs.get('initial_vm_count'),
+            'INITIAL_S_VM_COUNT': kwargs.get('initial_s_vm_count',
+                                             default_vm_cnt),
+            'INITIAL_M_VM_COUNT': kwargs.get('initial_m_vm_count',
+                                             default_vm_cnt),
+            'INITIAL_L_VM_COUNT': kwargs.get('initial_l_vm_count',
+                                             default_vm_cnt),
             'SOURCE_OF_JOBS': 'PARAMS',
             'JOBS': kwargs.get('jobs_as_json', '[]'),
             'SIMULATION_SPEEDUP': kwargs.get('simulation_speedup', '1.0'),
