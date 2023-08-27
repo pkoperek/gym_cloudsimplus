@@ -9,3 +9,8 @@ register(
     id='ThreeSizeAppEnv-v0',
     entry_point='gym_cloudsimplus.envs:ThreeSizeAppEnv',
 )
+
+register(
+    id='HistoryAppEnv-v0',
+    entry_point='gym_cloudsimplus.envs:HistoryAppEnv',
+)
