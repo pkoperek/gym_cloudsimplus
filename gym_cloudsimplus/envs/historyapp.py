@@ -50,7 +50,7 @@ class HistoryAppEnv(gym.Env):
         self.observation_space = spaces.Box(
             low=0.0,
             high=1.0,
-            shape=(buffer_size, 7),
+            shape=(buffer_size, 7, 1),
             dtype=np.float32,
         )
         params = {
@@ -68,7 +68,7 @@ class HistoryAppEnv(gym.Env):
         self._clear_history_buffer()
 
     def _clear_history_buffer(self):
-        self.history_buffer = np.zeros([buffer_size, 7], dtype=np.float32)
+        self.history_buffer = np.zeros(shape=(buffer_size, 7, 1), dtype=np.float32)
 
     def step(self, action):
         if type(action) == np.int64:
@@ -88,7 +88,17 @@ class HistoryAppEnv(gym.Env):
 
     def _add_to_buffer(self, raw_obs):
         raw_obs_lst = list(raw_obs)
-        self.history_buffer = np.append(self.history_buffer[1:], [raw_obs_lst], axis=0)
+        self.history_buffer = np.append(
+            self.history_buffer[1:],
+            [
+                [
+                    [observation]
+                    for observation
+                    in raw_obs_lst
+                ]
+            ],
+            axis=0
+        )
 
     def reset(self):
         result = simulation_environment.reset(self.simulation_id)
